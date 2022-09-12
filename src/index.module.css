@@ -1,0 +1,48 @@
+.test {
+  border-right: 1px solid #000;
+  box-sizing: border-box;
+  width: 500px;
+  background: #ceefc6;
+  padding: 20px;
+}
+
+.fontSizeText {
+  font-size: 25px;
+  color: #aa7cf5;
+}
+
+.fontSizeNameFunctionComponent {
+  font-size: 35px;
+  color: #804ad6;
+}
+
+.fontSizeNameClassComponent {
+  font-size: 30px;
+  color: #d11fc0;
+}
+
+.buttonStyleFunctionComponent {
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 5px;
+  background: #e7afe1;
+  color: #d11fc0;
+  ;
+}
+
+.buttonStyleClassComponent {
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 5px;
+  background: #e7afe1;
+  color: #804ad6;
+  ;
+}
+
+.formPadding {
+  padding: 10px;
+  border-radius: 10px;
+  margin: 15px;
+  color: green;
+}
+
