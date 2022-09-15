@@ -2,7 +2,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement } from "../store/counter";
 import { toggleVisibleProfile } from "../store/profile";
-import { ProfileForm } from "../components/profile-form";
+import { ProfileForm } from "../components";
 
 export const ProfilePage = () => {
   const data = useSelector((state) => state.counter.count);
