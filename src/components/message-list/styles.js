@@ -5,8 +5,8 @@ import { Send } from '@mui/icons-material';
 
 
 export const Input = styled(DefaultInput)`
-  color: ${(props)=>{
-    // console.log("props", props);
+  color: ${(ctx)=>{
+  // console.log("ctx mui", ctx);
     return "#ffff5f";
   }};
   padding: 20px 15px;

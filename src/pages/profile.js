@@ -1,5 +1,22 @@
 // import { MessageList, Layout, Header, ChatList } from './';
+import { useSelector, useDispatch } from "react-redux";
+import { increment, decrement } from "../store/counter";
 
 export const ProfilePage = () => {
-  return <div>profile page</div>;
+  const data = useSelector((state) => state.counter.count);
+  const dispatch = useDispatch();
+
+  console.log("data", data)
+
+  return (
+    <div>
+      profile page
+      <div>
+        <h1>{data}</h1>
+
+        <button onClick={() => dispatch(increment())}>increment</button>
+        <button onClick={() => dispatch(decrement())}>decrement</button>
+      </div>
+    </div>
+  );
 }
