@@ -6,7 +6,7 @@ import { MessageList, Layout, ChatList } from '../components';
 //   return <div>chat page</div>
 // };
 
-{/* <Layout messages={<MessageList />} chats={<ChatList />} /> */ }
+// {/* <Layout messages={<MessageList />} chats={<ChatList />} /> */ }
 
 export const ChatPage = () => {
   const navigate = useNavigate();
