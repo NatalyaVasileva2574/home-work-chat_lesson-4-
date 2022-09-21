@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { sendMessage, messagesSelector } from "../../store/messages";
+import { sendMessageWithBot, messagesSelector } from "../../store/messages";
 import { Message } from "./message";
 // import { PropTypes } from "prop-types";
 // import { Input, Button } from '@mui/material';
@@ -19,7 +19,7 @@ export const MessageList = () => {
   //   room1: [{ author: 'User', message: 'test', date: new Date() }]
   // });
 
-  const selector = useMemo(()=> messagesSelector(roomId),[roomId])
+  const selector = useMemo(() => messagesSelector(roomId), [roomId])
 
   const messages = useSelector(selector);
 
@@ -52,8 +52,11 @@ export const MessageList = () => {
       //     { author, message, date: new Date() },
       //   ],
       // }));
-      dispatch(sendMessage(roomId, {message, author}));
+      dispatch(sendMessageWithBot(roomId, { message, author }));
       setValue("");
+
+      // console.log("cancel", cancel);
+      // cancel();
     }
   }, [roomId, dispatch]);
 
@@ -87,12 +90,12 @@ export const MessageList = () => {
         // ]);
         send("hello from bot", "Bot")
       }, 1000);
-  
+
       return () => {
         clearInterval(timerId);
       };
     }
-  }, [ send, messages]);
+  }, [send, messages]);
 
 
   // console.log("ref", ref.current);
@@ -116,12 +119,12 @@ export const MessageList = () => {
         onKeyPress={handlePressInput}
         endAdornment={
           <InputAdornment position="end">
-            {value && <SendIcon onClick={send} />}
+            {value && <SendIcon onClick={() => send(value)} />}
           </InputAdornment>
         }
       />
 
-      {/* <Button variant="contained" onClick={sendMessage}>send</Button> */}
+      { }
     </>
   );
 };
