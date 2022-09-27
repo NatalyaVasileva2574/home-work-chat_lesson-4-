@@ -1,21 +1,31 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { sendMessageWithBot, messagesSelector } from "../../store/messages";
 import { Message } from "./message";
 // import { PropTypes } from "prop-types";
 // import { Input, Button } from '@mui/material';
 import { Input, SendIcon } from "./styles";
 import { InputAdornment } from '@mui/material';
 // import { Send } from '@mui/icons-material';
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
+// import { useSelector } from "react-redux";
 
 
 export const MessageList = () => {
-  const [messageList, setMessageList] = useState({
-    room1: [{ author: 'User', message: 'test', date: new Date() }]
-  });
+  const { roomId } = useParams();
+
+  // const [messageList, setMessageList] = useState({
+  //   room1: [{ author: 'User', message: 'test', date: new Date() }]
+  // });
+
+  const selector = useMemo(() => messagesSelector(roomId), [roomId])
+
+  const messages = useSelector(selector);
 
   const [value, setValue] = useState("");
 
-  const { roomId } = useParams();
+  const dispatch = useDispatch();
 
   const ref = useRef();
 
@@ -32,23 +42,27 @@ export const MessageList = () => {
   // console.log("ref2", ref2.current);
 
 
-  const sendMessage = useCallback((message, author = "User") => {
+  const send = useCallback((message, author = "User") => {
     // ref2.current=new Date().toString();
     if (message) {
-      setMessageList((state) => ({
-        ...state,
-        [roomId]: [
-          ...(state[roomId] ?? []),
-          { author, message, date: new Date() },
-        ],
-      }));
+      // setMessageList((state) => ({
+      //   ...state,
+      //   [roomId]: [
+      //     ...(state[roomId] ?? []),
+      //     { author, message, date: new Date() },
+      //   ],
+      // }));
+      dispatch(sendMessageWithBot(roomId, { message, author }));
       setValue("");
+
+      // console.log("cancel", cancel);
+      // cancel();
     }
-  }, [roomId]);
+  }, [roomId, dispatch]);
 
   const handlePressInput = ({ code }) => {
     if (code === "Enter") {
-      sendMessage(value);
+      send(value);
     }
   };
 
@@ -61,10 +75,10 @@ export const MessageList = () => {
         behavior: 'smooth'
       })
     }
-  }, [messageList]);
+  }, [messages]);
 
   useEffect(() => {
-    const messages = messageList[roomId] ?? [];
+    // const messages = [];
     const lastMessage = messages[messages.length - 1];
     let timerId = null;
 
@@ -74,24 +88,25 @@ export const MessageList = () => {
         //   ...messageList,
         //   { author: "Bot", message: "Hello from Bot", date: new Date() },
         // ]);
-        sendMessage("hello from bot", "Bot")
+        send("hello from bot", "Bot")
       }, 1000);
 
       return () => {
         clearInterval(timerId);
       };
     }
-  }, [messageList, roomId, sendMessage]);
+  }, [send, messages]);
+
 
   // console.log("ref", ref.current);
 
-  const messages = messageList[roomId] ?? [];
+  // const messages = messageList[roomId] ?? [];
 
   return (
     <>
       <div ref={ref}>
         {messages.map((message, index) => (
-          <Message message={message} key={index} />
+          <Message message={message} key={index} roomId={roomId} />
         ))}
       </div>
 
@@ -104,12 +119,12 @@ export const MessageList = () => {
         onKeyPress={handlePressInput}
         endAdornment={
           <InputAdornment position="end">
-            {value && <SendIcon onClick={sendMessage} />}
+            {value && <SendIcon onClick={() => send(value)} />}
           </InputAdornment>
         }
       />
 
-      {/* <Button variant="contained" onClick={sendMessage}>send</Button> */}
+      { }
     </>
   );
 };
