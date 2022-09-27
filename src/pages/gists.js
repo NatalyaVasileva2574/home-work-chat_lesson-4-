@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { useState } from 'react';
-import { getGists } from '../store/gists';
+import { getGists, searchGists } from '../store/gists';
 
 
 
@@ -14,10 +14,19 @@ import { getGists } from '../store/gists';
 //   return data;
 // };
 
+
 const buttons = Array.from({ length: 10 }).map((_, index) => index + 1)
 
 export const GistsPage = () => {
-  const { gists, pending, error } = useSelector((state) => state.gists);
+  const {
+    gists,
+    pending,
+    error,
+    gistsBySearch,
+    pendingBySearch,
+    errorBySearch,
+  } = useSelector((state) => state.gists);
+
   const dispatch = useDispatch()
   //   const [gists, setGists] = useState([]);
   //   const [pending, setPending] = useState(false);
@@ -39,14 +48,20 @@ export const GistsPage = () => {
   // }
 
   useEffect(() => {
-    if (!gists.length){
+    if (!gists.length) {
       dispatch(getGists());
     }
   }, [dispatch, gists]);
 
-  console.log("gists", gists)
+  useEffect(() => {
+    if (!gistsBySearch.length) {
+      dispatch(searchGists());
+    }
+  }, [dispatch, gistsBySearch]);
 
-  if (error) {
+  // console.log("gists", gists)
+
+  if (error || errorBySearch) {
     return <h1>error ...</h1>;
   }
 
@@ -62,14 +77,33 @@ export const GistsPage = () => {
         return <button onClick={() => dispatch(getGists(btn))} key={index}>{btn}</button>;
       })}
       <hr />
-      
-      {pending ? <h1>pending...</h1> : gists.map((gist, index) => {
-        return (
-          <div key={index}>
-            <h2>{gist.url}</h2>
-          </div>
-        );
-      })}
+
+      {pending ? (
+        <h1>pending...</h1>
+      ) : (
+        gistsBySearch.map((gist, index) => {
+          return (
+            <div key={index}>
+              <h2>{gist.url}</h2>
+            </div>
+          );
+        })
+      )}
+
+      <hr />
+
+      {pendingBySearch ? (
+        <h1>pending...</h1>
+      ) : (
+        gists.map((gist, index) => {
+          return (
+            <div key={index}>
+              <h2>{gist.url}</h2>
+            </div>
+          );
+        })
+      )}
+
     </div>
   );
 };
