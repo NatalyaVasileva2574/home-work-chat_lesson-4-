@@ -29,6 +29,7 @@
 
 // // foo()
 
+// import { get, child, ref, push, remove } from "firebase/database";
 import { get, child, ref, push } from "firebase/database";
 import { nanoid } from "nanoid";
 import { database } from "./firebase";
@@ -44,3 +45,8 @@ export const createMessageApi = async (message, roomId) => {
 
   return newMessage;
 };
+
+
+// export const removeMessageApi=(roomId, messageId)=>{
+// return remove(child(ref(database), `conversations/${conversation}`))
+// }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { sendMessageWithBot, messagesSelector } from "../../store/messages";
+import { sendMessagesFb, messagesSelector } from "../../store/messages";
 import { Message } from "./message";
 // import { PropTypes } from "prop-types";
 // import { Input, Button } from '@mui/material';
@@ -52,7 +52,7 @@ export const MessageList = () => {
       //     { author, message, date: new Date() },
       //   ],
       // }));
-      dispatch(sendMessageWithBot(roomId, { message, author }));
+      dispatch(sendMessagesFb({ message, author }, roomId));
       setValue("");
 
       // console.log("cancel", cancel);
