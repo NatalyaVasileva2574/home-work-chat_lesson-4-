@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { MessageList, Layout, ChatList } from '../components';
+import { getConversations } from '../store/conversations';
 
 // export const ChatPage = () => {
 //   return <div>chat page</div>
@@ -10,6 +12,7 @@ import { MessageList, Layout, ChatList } from '../components';
 
 export const ChatPage = () => {
   const navigate = useNavigate();
+ const dispatch= useDispatch()
 
   useEffect(() => {
     const listener = ({ code }) => {
@@ -23,6 +26,10 @@ export const ChatPage = () => {
       document.removeEventListener("keydown", listener)
     }
   }, [navigate]);
+
+  useEffect(() => {
+    dispatch(getConversations())
+  },[dispatch ]);
 
   return (
     <>
@@ -42,3 +49,5 @@ export const ChatPage = () => {
     </>
   );
 }
+
+

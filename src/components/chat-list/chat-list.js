@@ -5,9 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useParams, useNavigate } from "react-router-dom";
 // import { useCallback, useState } from "react";
 import {
-  deleteConversation,
-  createConversation,
+  // deleteConversation,
+  createConversationByName as createConversation,
   conversationsSelector,
+  removeConversationByName
 } from "../../store/conversations";
 import { Chat } from "./chat";
 
@@ -32,7 +33,7 @@ export const ChatList = () => {
   const deleteConversationByName = useCallback(
     (name, e) => {
       e.preventDefault();
-      dispatch(deleteConversation(name));
+      dispatch(removeConversationByName(name));
       navigate("/chat");
       // setTimeout(() => navigate("/chat"));
     }, [dispatch, navigate]
@@ -63,3 +64,4 @@ export const ChatList = () => {
     ))}
   </List>;
 }
+
