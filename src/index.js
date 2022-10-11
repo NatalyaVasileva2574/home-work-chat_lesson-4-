@@ -5,16 +5,29 @@
 
 import ReactDOM from 'react-dom/client';
 // import { ThemeProvider, createTheme } from '@mui/material';
+import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
+import { onAuthStateChanged } from "firebase/auth";
 // import { MessageList, Layout, Header, ChatList } from './components';
-import { HomePage, ProfilePage, ChatPage } from "./pages";
-import { Header } from "./components";
+import {
+  HomePage,
+  ProfilePage,
+  ChatPage,
+  GistsPage,
+  LoginPage,
+  SignUpPage,
+} from "./pages";
+import { Header, PublicRoute, PrivateRoute } from "./components";
+import { auth } from "./api/firebase";
 import { CustomThemeProvider } from "./theme-context";
-import { store } from "./store";
+import { store, persistor } from "./store";
 import "./global.css";
+import { useEffect, useState } from 'react';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const session = false;
 
 // const App = () => {
 //   return <MessageList />;
@@ -30,30 +43,105 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 //   // }
 // });
 
-root.render(
-  <Provider store={store}>
-    <CustomThemeProvider>
-      {/* <ThemeProvider theme={theme}> */}
-      <BrowserRouter>
-        <Header />
+const App = () => {
+  const [session, setSession] = useState(null);
 
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route
-            path="/chat/*"
-            element={
-              <ChatPage />
-            }
-          />
-          <Route path="*" element={<h1>404</h1>} />
-        </Routes>
-      </BrowserRouter>
-      {/* </ThemeProvider> */}
-    </CustomThemeProvider>
-  </Provider>
+  const isAuth = session?.email;
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setSession(user)
+      } else {
+        setSession(null)
+      }
+    })
+  }, []);
+
+ 
+
+  return (
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <CustomThemeProvider>
+          {/* <ThemeProvider theme={theme}> */}
+          <BrowserRouter>
+            <Header email={session?.email} />
+            {/* <Header  /> */}
+
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute isAuth={isAuth}>
+                    <ProfilePage />
+                  </PrivateRoute>
+                } />
+              <Route
+                path="/chat/*"
+                element={
+                  <PrivateRoute isAuth={isAuth}>
+                    <ChatPage />
+                  </PrivateRoute>
+                } />
+              <Route
+                path="/gists/*"
+                element={
+                  <PrivateRoute isAuth={isAuth}>
+                    <GistsPage />
+                  </PrivateRoute>
+                } />
+              <Route
+                path="/login/*"
+                element={
+                  <PublicRoute isAuth={isAuth}>
+                    <LoginPage />
+                  </PublicRoute>
+                } />
+              <Route
+                path="/signup/*"
+                element={
+                  <PublicRoute isAuth={isAuth}>
+                    <SignUpPage />
+                  </PublicRoute>
+                } />
+              <Route path="*" element={<h1>404</h1>} />
+            </Routes>
+          </BrowserRouter>
+          {/* </ThemeProvider> */}
+        </CustomThemeProvider>
+      </PersistGate>
+    </Provider>
+  )
+}
+
+root.render(
+  <App />
+
+  // <Provider store={store}>
+  //   <PersistGate persistor={persistor}>
+  //     <CustomThemeProvider>
+  //       {/* <ThemeProvider theme={theme}> */}
+  //       <BrowserRouter>
+  //         <Header />
+
+  //         <Routes>
+  //           <Route path="/" element={<HomePage />} />
+  //           <Route path="/profile" element={<ProfilePage />} />
+  //           <Route path="/chat/*" element={<ChatPage />} />
+  //           <Route path="/gists*" element={<GistsPage />} />
+  //           <Route path="*" element={<h1>404</h1>} />
+  //         </Routes>
+  //       </BrowserRouter>
+  //       {/* </ThemeProvider> */}
+  //     </CustomThemeProvider>
+  //   </PersistGate>
+  // </Provider>
 
 );
+
+
 
 // root.render(
 //   <ThemeProvider theme={theme}>
