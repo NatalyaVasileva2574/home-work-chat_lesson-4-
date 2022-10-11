@@ -1,13 +1,14 @@
 import { nanoid } from "nanoid";
-import { SEND_MESSAGE, 
+import {
+  SEND_MESSAGE,
   DELETE_MESSAGE,
   GET_MESSAGES_START,
   GET_MESSAGES_SUCCESS,
   GET_MESSAGES_ERROR
- } from "./types";
+} from "./types";
 
 
-const initialState = {
+export const initialState = {
   messages: {
     room1: [
       { author: 'User', message: 'test', date: new Date(), id: nanoid() },
@@ -21,7 +22,7 @@ const initialState = {
   pending: false,
 }
 
-export const messagesReducer = (state = initialState, action) => {
+export const messagesReducer = (state = initialState, action ={}) => {
   switch (action.type) {
     case SEND_MESSAGE:
       return {
